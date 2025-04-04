@@ -1,20 +1,46 @@
+import axios from "axios";
+import { useState } from "react";
+
 export default function SignUp() {
+    const [formData, setFormData] = useState(Array(4).fill(""));
+
+    function handleChange(e : React.FormEvent<HTMLFormElement>, index : number) {
+        // console.log(formData[index]);
+        formData[index] = e.target.value;
+        setFormData(formData);
+    }
+
+
+    function handleSubmit(e : React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+        axios.post("http://localhost:8192/auth/signUp", {
+            username : formData[0], 
+            email : formData[1], 
+            password : formData[2], 
+            reEnterPassword : formData[3]
+        }).then(res => console.log(res)).catch(err => console.log(err));
+    }
+
     const FormRegisters = [
         {
             label : "Tên Đăng Nhập",
-            type : "text"
+            type : "text",
+            name : "username"
         },
         {
             label : "Email",
-            type : "gmail"
+            type : "email",
+            name : "email"
         },
         {
             label : "Mật Khẩu",
-            type : "password"
+            type : "password",
+            name : "password"
         },
         {
             label : "Nhập lại mật khẩu",
-            type : "password"
+            type : "password",
+            name : "confirmPassword"
         }
     ];
 
@@ -25,13 +51,18 @@ export default function SignUp() {
             </div>
 
             <div className="flex-1 w-full h-full flex justify-center">
-                <form className="w-[50%] mt-[50px] relative">
-                    {FormRegisters.map((Register) => (
+                <form 
+                onSubmit={handleSubmit}
+                className="w-[50%] mt-[50px] relative">
+                    {FormRegisters.map((Register, index) => (
                         <div className="mb-[20px]">
                             <label className="text-[25px] font-bold">{Register.label}</label>
                             <br />
                             <input className="w-full h-[40px] outline-none border-[1px] border-[#ccc]
-                            p-[20px] text-[20px]" type={Register.type}/>
+                            p-[20px] text-[20px]" 
+                            type={Register.type} 
+                            onChange={(e) => handleChange(e, index)}
+                            />
                         </div>
                     ))}
 

@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import * as QuestionComponent from "../component/QuestionComponent"
+import { useParams } from "react-router-dom";
+import axios from "axios";
 
 interface MultipleChoiceQuestion {
     type: 1 | 2;
@@ -15,6 +17,17 @@ interface TextQuestion {
 type Question = MultipleChoiceQuestion | TextQuestion;
 
 export default function Test() {
+    const param = useParams();
+
+    // useEffect(() => {
+    //     const sentIdToBackend = async () => {
+    //         try {
+    //             const res = await axios.post("", param);
+    //         } catch (error) {
+    //             console.log(error);
+    //         }
+    //     };
+    // });
 
     // const ABC : string[] = ["1","True-False-True-False","Chicken"];
 
@@ -47,7 +60,6 @@ export default function Test() {
 
     function handleSubmit(e : React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        console.log(answer);
     }
 
     return (
@@ -86,7 +98,11 @@ export default function Test() {
                     }
                 })}
 
-                <button type="submit">Submit</button>
+                <button 
+                    type="submit"
+                    className="w-full h-[50px] border-[1px] my-[50px] cursor-pointer bg-[#14518b] text-[white] rounded-[20px] hover:bg-[white] hover:text-[#14518b]
+                    duration-300"
+                >Submit</button>
             </form>
         </div>
     )

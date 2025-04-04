@@ -31,7 +31,7 @@ export default function App() {
 	];
 
 	return (
-		<div className="w-screen h-screen flex flex-col">
+		<div className="w-screen h-screen flex flex-col overflow-x-hidden">
 			<div className="w-full h-[75px] bg-[#14518b] flex text-white 
 			justify-between text-[20px]">
 				<div className="ml-[30px] flex">
