@@ -1,10 +1,29 @@
 import { FaUser } from "react-icons/fa";
 import { FaKey } from "react-icons/fa";
 import axios from "axios";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function SignIn() {
+    const [formData, setFormData] = useState<string[]>(Array(2).fill(""));
+    
+    function handleChange(e : any, index : number) {
+        formData[index] = e.target.value;
+        setFormData(formData);
+    }
+    const navigate = useNavigate();
     function handleSubmit(event : React.FormEvent<HTMLFormElement>) {
-        event.preventDefault()
+        event.preventDefault(),
+        axios.post("http://localhost:8192/auth/signIn", {
+            username : formData[0],
+            password : formData[1]
+        }).then(res => {
+            document.cookie = `username=${res.data.username}; path/;`;  
+            document.cookie = `password=${res.data.password}; path/;`;
+            navigate("/");
+            
+            location.reload();
+        }).catch(err => console.log(err));
     }
 
     return (
@@ -25,6 +44,7 @@ export default function SignIn() {
                             bg-[white] border-[1px] border-[#ccc] outline-none
                             rounded-[5px]"
                             type="text" 
+                            onChange={(e) => handleChange(e, 0)}
                             placeholder="Tên Đăng Nhập"/>
                         </div>
 
@@ -36,6 +56,7 @@ export default function SignIn() {
                             bg-[white] border-[1px] border-[#ccc] outline-none
                             rounded-[5px]"
                             type="password" 
+                            onChange={(e) => handleChange(e, 1)}
                             placeholder="Mật Khẩu"/>
                         </div>
 

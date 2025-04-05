@@ -4,8 +4,7 @@ import { useState } from "react";
 export default function SignUp() {
     const [formData, setFormData] = useState(Array(4).fill(""));
 
-    function handleChange(e : React.FormEvent<HTMLFormElement>, index : number) {
-        // console.log(formData[index]);
+    function handleChange(e : any, index : number) {
         formData[index] = e.target.value;
         setFormData(formData);
     }
