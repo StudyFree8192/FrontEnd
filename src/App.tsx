@@ -5,7 +5,7 @@ export default function App() {
 	const LinkPagesLeft = [
 		{
 			Name : "GIẢI BÀI TẬP",
-			href : "/Solve"
+			href : "/Problem"
 		},
 	
 		{

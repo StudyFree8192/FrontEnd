@@ -19,38 +19,22 @@ type Question = MultipleChoiceQuestion | TextQuestion;
 export default function Test() {
     const param = useParams();
 
-    // useEffect(() => {
-    //     const sentIdToBackend = async () => {
-    //         try {
-    //             const res = await axios.post("", param);
-    //         } catch (error) {
-    //             console.log(error);
-    //         }
-    //     };
-    // });
+    const [questionsList, setQuestionsList] = useState<Question[]>([]);
 
-    // const ABC : string[] = ["1","True-False-True-False","Chicken"];
+    useEffect(() => {
+        axios.post(`http://localhost:8192/problem/${param.id}`, param.id)
+        .then(res => {
+            const newQuestion = {
+                type : res.data[0].Type,
+                question : res.data[0].Question,
+                options : res.data[0].Options
+            };
+            setQuestionsList([newQuestion]);
+        })
+        .catch(error => console.log(error));
+    }, [param.id]);
 
-    const QuestionsList : Question[] = [
-        {
-            type : 1,
-            question : "What is your favorit food?",
-            options : ["Chicken","Beff stack","Pizza","Potato"]
-        },
-
-        {
-            type : 2,
-            question : "What is your favorit food?",
-            options : ["Chicken","Beff stack","Pizza","Potato"]
-        },
-
-        {
-            type : 3,
-            question : "What is your favorit food?"
-        }
-    ]
-
-    const [answer, setAnswer] = useState<string[]>(Array(QuestionsList.length).fill(""));
+    const [answer, setAnswer] = useState<string[]>(Array(questionsList.length).fill(""));
 
     const handleAnswerChange = (id : number, value : string) => {
         const newAnswer : string[] = answer;
@@ -65,7 +49,7 @@ export default function Test() {
     return (
         <div className="flex flex-col items-center mt-[10px] overflow-hidden">
             <form onSubmit={handleSubmit}>
-                {QuestionsList.map((question, index) => {
+                {questionsList.map((question, index) => {
                     switch (question.type) {
                         case 1:
                             return (
