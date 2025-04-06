@@ -10,6 +10,7 @@ import Create from './Pages/Create.tsx'
 import SignIn from './Pages/User/SignIn.tsx'
 import SignUp from './Pages/User/SignUp.tsx'
 import Exercise from './Pages/Exercise.tsx'
+import Testcase from './Pages/Testcase.tsx'
 
 createRoot(document.getElementById('root')!).render(
 	<StrictMode>
@@ -24,6 +25,8 @@ createRoot(document.getElementById('root')!).render(
 					<Route path='/SignUp' element={<SignUp/>}></Route>
 					<Route path='/Problem/:id' element={<Exercise/>}></Route>
 					<Route path='/Contest/:id' element={<Exercise/>}></Route>
+					<Route path='/Problem/:id/Submit' element={<Testcase/>}></Route>
+					<Route path='/Contest/:id/Submit' element={<Testcase/>}></Route>
 					<Route path='*' element={<NotFound/>}/>
 				</Route>
 			</Routes>

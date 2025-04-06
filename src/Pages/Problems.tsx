@@ -63,6 +63,8 @@ export default function Problems() {
         
         
     }
+
+    
     
     return (
         <div className="px-[5%] pt-[2%] text-[20px]">

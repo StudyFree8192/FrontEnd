@@ -38,13 +38,14 @@ export const MultipleChoice = forwardRef<HTMLDivElement, PropsWithChildren<Multi
             //     </div>
             // </div>
 
-            <div className="w-full rounded-[10px] shadow-[0px_0px_10px_rgba(0,0,0,0.3)] mb-[20px] overflow-hidden">
+            <div className="w-full rounded-[10px] shadow-[0px_0px_10px_rgba(0,0,0,0.3)] mb-[20px] overflow-hidden"
+            key = {ID}>
                 <h1 className="p-[20px] text-[30px] border-b-[2px] border-b-[#ccc] mb-[10px]">{question}</h1>
 
                 <div className="p-[20px]">
                     {
                         options.map((option, index) => (
-                            <p className="text-[25px]">
+                            <p className="text-[25px]" key={index}>
                                 {String.fromCharCode(65 + index)}. {option}
                             </p>
                         ))
@@ -57,7 +58,9 @@ export const MultipleChoice = forwardRef<HTMLDivElement, PropsWithChildren<Multi
                             options.map((option,index) => (
                                 <>
                                     <input type="radio" className="hidden" name={ID.toString()} id={`${option}-${ID}`}
-                                    onChange={() => onChange?.(ID, index.toString())}/>
+                                    onChange={() => onChange?.(ID, (index + 1).toString())}
+                                    key={index}
+                                    />
                                     <label 
                                     className="relative rounded-[50%] bg-[white] py-[10px] px-[15px] mr-[20px] cursor-pointer font-bold"
                                     htmlFor={`${option}-${ID}`}
@@ -90,6 +93,7 @@ export const TrueFalseChoice = forwardRef<HTMLDivElement, PropsWithChildren<Mult
         }
         return (
             <div className={`w-full rounded-[10px] p-[20px] shadow-[0px_0px_10px_rgba(0,0,0,0.3)] mb-[20px]`} 
+            key={ID}
             style={{background : color || 'white'}}
             ref={ref}>
                 <h1 className="text-[30px] border-b-[2px] border-b-[#ccc] mb-[10px]">{question}</h1>
@@ -125,6 +129,7 @@ export const ShortAnswer = forwardRef<HTMLDivElement, PropsWithChildren<ShortAns
         return (
             <div className={`w-full rounded-[10px] p-[20px] shadow-[0px_0px_10px_rgba(0,0,0,0.3)] mb-[20px]`} 
             style={{background : color || 'white'}}
+            key={ID}
             ref={ref}>
                 <h1 className="text-[30px] border-b-[2px] border-b-[#ccc] mb-[10px]">{question}</h1>
 
@@ -137,9 +142,13 @@ export const ShortAnswer = forwardRef<HTMLDivElement, PropsWithChildren<ShortAns
 );
 
 export const Coding = forwardRef<HTMLDivElement, PropsWithChildren<any>>(
-    function Coding({question, ID, onChange, color}, ref) {
+    function Coding({question, ID}, ref) {
+        function handleCopy(text : any) {
+            navigator.clipboard.writeText(text);
+        }
+
         return (
-            <div>
+            <div key={ID}>
                 <p className="text-[25px] mb-[20px]">{question.topic}</p>
 
                 <div className="mb-[20px]">
@@ -164,7 +173,9 @@ export const Coding = forwardRef<HTMLDivElement, PropsWithChildren<any>>(
                                     border-[1px] border-[#ccc] bg-[#f8f8f8] rounded-[10px]
                                     p-[20px] text-[20px] relative overflow-hidden">
                                         <button className="absolute right-0 top-0 bg-white w-[10%] 
-                                        border-[#ccc] border-b-[1px] border-l-[1px] rounded-bl-[10px] cursor-pointer">Copy</button>
+                                        border-[#ccc] border-b-[1px] border-l-[1px] rounded-bl-[10px] cursor-pointer"
+                                        onClick={() => handleCopy(ex[0])}
+                                        >Copy</button>
                                     <p>{ex[0]}</p>
                                 </div>
 
@@ -176,7 +187,8 @@ export const Coding = forwardRef<HTMLDivElement, PropsWithChildren<any>>(
                                     border-[1px] border-[#ccc] bg-[#f8f8f8] rounded-[10px]
                                     p-[20px] text-[20px] relative overflow-hidden">
                                         <button className="absolute right-0 top-0 bg-white w-[10%] 
-                                        border-[#ccc] border-b-[1px] border-l-[1px] rounded-bl-[10px] cursor-pointer">Copy</button>
+                                        border-[#ccc] border-b-[1px] border-l-[1px] rounded-bl-[10px] cursor-pointer"
+                                        onClick={() => handleCopy(ex[1])}>Copy</button>
                                     <p>{ex[1]}</p>
                                 </div>
                             </div>
