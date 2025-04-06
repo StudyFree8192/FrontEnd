@@ -24,6 +24,7 @@ createRoot(document.getElementById('root')!).render(
 					<Route path='/SignIn' element={<SignIn/>}></Route>
 					<Route path='/SignUp' element={<SignUp/>}></Route>
 					<Route path='/Problem/:id' element={<Exercise/>}></Route>
+					<Route path='/Contest/:id' element={<Exercise/>}></Route>
 					<Route path='*' element={<NotFound/>}/>
 				</Route>
 			</Routes>

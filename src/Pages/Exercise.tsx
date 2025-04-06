@@ -21,17 +21,33 @@ export default function Test() {
 
     const [questionsList, setQuestionsList] = useState<Question[]>([]);
 
+    
+
     useEffect(() => {
-        axios.post(`http://localhost:8192/problem/${param.id}`, param.id)
-        .then(res => {
-            const newQuestion = {
-                type : res.data[0].Type,
-                question : res.data[0].Question,
-                options : res.data[0].Options
-            };
-            setQuestionsList([newQuestion]);
-        })
-        .catch(error => console.log(error));
+        async function getQuestion() {
+            const path = window.location.pathname;
+            const parts = path.split("/");
+            await axios.post(`http://localhost:8192/${parts[1].toLowerCase()}/${param.id}`, param.id)
+            .then(res => {
+                
+                let newQuestion : any[] = [];
+                for (let i = 0; i < res.data.length; i++) {
+                    const Question = {
+                        type : res.data[i].Type,
+                        question : res.data[i].Question,
+                        options : res.data[i].Options
+                    };
+
+                    newQuestion.push(Question);
+                }
+                
+                setQuestionsList(newQuestion);
+            })
+            .catch(error => console.log(error));
+        }
+
+        getQuestion();
+        
     }, [param.id]);
 
     const [answer, setAnswer] = useState<string[]>(Array(questionsList.length).fill(""));
