@@ -41,7 +41,7 @@ export default function App() {
 	return (
 		<div className="w-screen h-screen flex flex-col overflow-x-hidden">
 			<div className="w-full h-[75px] bg-[#14518b] flex text-white 
-			justify-between text-[20px]">
+			justify-between text-[20px] fixed z-50">
 				<div className="ml-[30px] flex">
 					{LinkPagesLeft.map((page, index) => (
 						<Link className="hover:bg-[rgba(255,255,255,0.2)] flex items-center p-[10px] justify-center" 
@@ -72,7 +72,7 @@ export default function App() {
 				
 			</div>
 			
-			<div className="flex-1">
+			<div className="flex-1 relative top-[100px]">
 				<Outlet/>
 			</div>
 		</div>

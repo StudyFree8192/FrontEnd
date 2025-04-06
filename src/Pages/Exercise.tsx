@@ -27,9 +27,10 @@ export default function Test() {
         async function getQuestion() {
             const path = window.location.pathname;
             const parts = path.split("/");
-            await axios.post(`http://localhost:8192/${parts[1].toLowerCase()}/${param.id}`, param.id)
+            await axios.post(`http://localhost:8192/problems/${param.id}`, {
+                type : parts[1].toLowerCase(),
+            })
             .then(res => {
-                
                 let newQuestion : any[] = [];
                 for (let i = 0; i < res.data.length; i++) {
                     const Question = {
@@ -58,7 +59,7 @@ export default function Test() {
         setAnswer(newAnswer);
     }
 
-    function handleSubmit(e : React.FormEvent<HTMLFormElement>) {
+    function handleSubmit(e : any) {
         e.preventDefault();
 
         console.log(answer);
@@ -148,7 +149,7 @@ export default function Test() {
                 
             </div>
                 
-            <div className="w-[20%] h-full flex flex-col items-center">
+            <div className="w-[15%] rounded-[20px] flex flex-col items-center fixed right-[3%] shadow-[0px_0px_10px_rgba(0,0,0,0.3)] z-50">
             <button 
                     onClick={(e) => handleSubmit(e)}
                     className="w-[80%] h-[50px] border-[1px] my-[50px] cursor-pointer bg-[#14518b] text-[white] rounded-[20px] hover:bg-[white] hover:text-[#14518b]
