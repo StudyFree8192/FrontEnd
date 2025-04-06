@@ -9,8 +9,6 @@ export default function Problems() {
     const queryParams = new URLSearchParams(location.search);
     let page : number = parseInt(queryParams.get("page") || "1");
 
-
-
     const [problems, setProblems] = useState<any[]>();
 
     function handleOnClickLeft() {

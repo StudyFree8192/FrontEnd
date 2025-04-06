@@ -19,10 +19,8 @@ type Question = MultipleChoiceQuestion | TextQuestion;
 export default function Test() {
     const param = useParams();
 
-    const [questionsList, setQuestionsList] = useState<Question[]>([]);
-
-    
-
+    const [questionsList, setQuestionsList] = useState<Question[]>([]);    
+    const [nameProblem, setNameProblem] = useState<string>("");
     useEffect(() => {
         async function getQuestion() {
             const path = window.location.pathname;
@@ -32,16 +30,16 @@ export default function Test() {
             })
             .then(res => {
                 let newQuestion : any[] = [];
-                for (let i = 0; i < res.data.length; i++) {
+                for (let i = 0; i < res.data[0].length; i++) {
                     const Question = {
-                        type : res.data[i].Type,
-                        question : res.data[i].Question,
-                        options : res.data[i].Options
+                        type : res.data[0][i].Type,
+                        question : res.data[0][i].Question,
+                        options : res.data[0][i].Options
                     };
-
                     newQuestion.push(Question);
                 }
-                
+
+                setNameProblem(res.data[1])
                 setQuestionsList(newQuestion);
             })
             .catch(error => console.log(error));
@@ -66,96 +64,65 @@ export default function Test() {
     }
 
     return (
-        // <div className="flex flex-col items-center mt-[10px] overflow-hidden">
-        //     <form onSubmit={handleSubmit}>
-        //         {questionsList.map((question, index) => {
-        //             switch (question.type) {
-        //                 case 1:
-        //                     return (
-        //                         <QuestionComponent.MultipleChoice 
-        //                             question={question.question} 
-        //                             options={question.options} 
-        //                             ID={index}
-        //                             onChange={handleAnswerChange}
-        //                         />
-        //                     );
-                        
-        //                 case 2:
-        //                     return (
-        //                         <QuestionComponent.TrueFalseChoice 
-        //                             question={question.question} 
-        //                             options={question.options} 
-        //                             ID={index}
-        //                             onChange={handleAnswerChange}
-        //                         />
-        //                     );
+        <div className="w-full h-full flex flex-col p-[20px] px-[5%]">
+            <div className="mb-[30px] border-b-[1px] border-b-[#ccc]">
+                <h1 className="text-[40px]">{nameProblem}</h1>
+            </div>
 
-        //                 case 3:
-        //                     return (
-        //                         <QuestionComponent.ShortAnswer 
-        //                             question={question.question}
-        //                             ID={index}
-        //                             onChange={handleAnswerChange}
-        //                         />
-        //                     )
-        //             }
-        //         })}
+            <div className="flex flex-1 w-full">
+                <div className=" w-[80%] h-full">
+                    {questionsList.map((question, index) => {
+                        switch (question.type) {
+                            case 1:
+                                return (
+                                    <QuestionComponent.MultipleChoice 
+                                        question={question.question} 
+                                        options={question.options} 
+                                        ID={index}
+                                        onChange={handleAnswerChange}
+                                    />
+                                );
+                            
+                            case 2:
+                                return (
+                                    <QuestionComponent.TrueFalseChoice 
+                                        question={question.question} 
+                                        options={question.options} 
+                                        ID={index}
+                                        onChange={handleAnswerChange}
+                                    />
+                                );
 
-        //         <button 
-        //             type="submit"
-        //             className="w-full h-[50px] border-[1px] my-[50px] cursor-pointer bg-[#14518b] text-[white] rounded-[20px] hover:bg-[white] hover:text-[#14518b]
-        //             duration-300"
-        //         >Submit</button>
-        //     </form>
-        // </div>
+                            case 3:
+                                return (
+                                    <QuestionComponent.ShortAnswer 
+                                        question={question.question}
+                                        ID={index}
+                                        onChange={handleAnswerChange}
+                                    />
+                                )
 
-        <div className="w-full h-full flex p-[20px]">
-            <div className="w-[80%] h-full">
-                {questionsList.map((question, index) => {
-                    switch (question.type) {
-                        case 1:
-                            return (
-                                <QuestionComponent.MultipleChoice 
-                                    question={question.question} 
-                                    options={question.options} 
-                                    ID={index}
-                                    onChange={handleAnswerChange}
-                                />
-                            );
-                        
-                        case 2:
-                            return (
-                                <QuestionComponent.TrueFalseChoice 
-                                    question={question.question} 
-                                    options={question.options} 
-                                    ID={index}
-                                    onChange={handleAnswerChange}
-                                />
-                            );
-
-                        case 3:
-                            return (
-                                <QuestionComponent.ShortAnswer 
-                                    question={question.question}
-                                    ID={index}
-                                    onChange={handleAnswerChange}
-                                />
-                            )
-                        }
-                    })
-                }
-
+                            case 4: 
+                                return (
+                                    <QuestionComponent.Coding
+                                    question = {question.question}
+                                        ID={index}
+                                    />
+                                )
+                            }
+                        })
+                    }
+                </div>
                     
-                
+                <div className="w-[15%] rounded-[20px] flex flex-col items-center fixed right-[5%] shadow-[0px_0px_10px_rgba(0,0,0,0.3)] z-50">
+                <button 
+                        onClick={(e) => handleSubmit(e)}
+                        className="w-[80%] h-[50px] border-[1px] my-[50px] cursor-pointer bg-[#14518b] text-[white] rounded-[20px] hover:bg-[white] hover:text-[#14518b]
+                        duration-300"
+                    >Submit</button>        
+                </div>
             </div>
-                
-            <div className="w-[15%] rounded-[20px] flex flex-col items-center fixed right-[3%] shadow-[0px_0px_10px_rgba(0,0,0,0.3)] z-50">
-            <button 
-                    onClick={(e) => handleSubmit(e)}
-                    className="w-[80%] h-[50px] border-[1px] my-[50px] cursor-pointer bg-[#14518b] text-[white] rounded-[20px] hover:bg-[white] hover:text-[#14518b]
-                    duration-300"
-                >Submit</button>
-            </div>
+            
         </div>
     )
 }

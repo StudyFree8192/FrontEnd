@@ -135,3 +135,56 @@ export const ShortAnswer = forwardRef<HTMLDivElement, PropsWithChildren<ShortAns
         )
     }
 );
+
+export const Coding = forwardRef<HTMLDivElement, PropsWithChildren<any>>(
+    function Coding({question, ID, onChange, color}, ref) {
+        return (
+            <div>
+                <p className="text-[25px] mb-[20px]">{question.topic}</p>
+
+                <div className="mb-[20px]">
+                    <p className="text-[30px] font-bold border-b-[1px] border-b-[#ccc] mb-[20px]">Input</p>
+                    <p className="text-[25px]">{question.input}</p>
+                </div>
+
+                <div className="mb-[30px]">
+                    <p className="text-[30px] font-bold border-b-[1px] border-b-[#ccc] mb-[20px]">Output</p>
+                    <p className="text-[25px]">{question.output}</p>
+                </div>
+
+                <div>
+                    {
+                        question.example.map((ex : String[]) => (
+                            <div className="mb-[40px]">
+                                <p 
+                                className="text-[30px] font-bold border-b-[1px] border-b-[#ccc] mb-[20px]">
+                                    Input Sample
+                                </p>
+                                <div className="w-full h-full 
+                                    border-[1px] border-[#ccc] bg-[#f8f8f8] rounded-[10px]
+                                    p-[20px] text-[20px] relative overflow-hidden">
+                                        <button className="absolute right-0 top-0 bg-white w-[10%] 
+                                        border-[#ccc] border-b-[1px] border-l-[1px] rounded-bl-[10px] cursor-pointer">Copy</button>
+                                    <p>{ex[0]}</p>
+                                </div>
+
+                                <p 
+                                className="text-[30px] font-bold border-b-[1px] border-b-[#ccc] mb-[20px] mt-[20px]">
+                                    Output Sample
+                                </p>
+                                <div className="w-full h-full 
+                                    border-[1px] border-[#ccc] bg-[#f8f8f8] rounded-[10px]
+                                    p-[20px] text-[20px] relative overflow-hidden">
+                                        <button className="absolute right-0 top-0 bg-white w-[10%] 
+                                        border-[#ccc] border-b-[1px] border-l-[1px] rounded-bl-[10px] cursor-pointer">Copy</button>
+                                    <p>{ex[1]}</p>
+                                </div>
+                            </div>
+                        ))
+                    }
+                </div>
+                
+            </div>
+        )
+    }
+)
