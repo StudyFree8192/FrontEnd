@@ -1,4 +1,5 @@
 import { forwardRef, PropsWithChildren, useRef } from "react";
+import "./Radio.css"
 
 interface MultipleChoiceProps {
     question : string;
@@ -18,22 +19,55 @@ interface ShortAnswerProps {
 export const MultipleChoice = forwardRef<HTMLDivElement, PropsWithChildren<MultipleChoiceProps>>(
     function MultipleChoice({question, options, ID, onChange, color}, ref) {
         return (
-            <div className={`w-[500px] rounded-[10px] p-[20px] shadow-[0px_0px_10px_rgba(0,0,0,0.3)] mb-[20px]`} 
-            style={{background : color || 'white'}}
-            ref={ref}>
-                <h1 className="text-[30px] border-b-[2px] border-b-[#ccc] mb-[10px]">{question}</h1>
-                <div className="mb-[20px]">
-                    {options.map((option, index) => (
-                        <div className="flex items-center">
-                            <input type="radio" name={ID.toString()} id = {`${option}-${ID}`} 
-                                className="mr-[10px] w-[25px] h-[25px] cursor-pointer"
-                                onChange={() => onChange?.(ID, index.toString())}
-                            />
-                            <label htmlFor={`${option}-${ID}`} className="text-[25px] cursor-pointer"
-                            >{option}</label>
-                            <br />
-                        </div>
-                    ))}
+            // <div className={`w-[500px] rounded-[10px] p-[20px] shadow-[0px_0px_10px_rgba(0,0,0,0.3)] mb-[20px]`} 
+            // style={{background : color || 'white'}}
+            // ref={ref}>
+            //     <h1 className="text-[30px] border-b-[2px] border-b-[#ccc] mb-[10px]">{question}</h1>
+            //     <div className="mb-[20px]">
+            //         {options.map((option, index) => (
+            //             <div className="flex items-center">
+            //                 <input type="radio" name={ID.toString()} id = {`${option}-${ID}`} 
+            //                     className="mr-[10px] w-[25px] h-[25px] cursor-pointer"
+            //                     onChange={() => onChange?.(ID, index.toString())}
+            //                 />
+            //                 <label htmlFor={`${option}-${ID}`} className="text-[25px] cursor-pointer"
+            //                 >{option}</label>
+            //                 <br />
+            //             </div>
+            //         ))}
+            //     </div>
+            // </div>
+
+            <div className="w-full rounded-[10px] shadow-[0px_0px_10px_rgba(0,0,0,0.3)] mb-[20px] overflow-hidden">
+                <h1 className="p-[20px] text-[30px] border-b-[2px] border-b-[#ccc] mb-[10px]">{question}</h1>
+
+                <div className="p-[20px]">
+                    {
+                        options.map((option, index) => (
+                            <p className="text-[25px]">
+                                {String.fromCharCode(65 + index)}. {option}
+                            </p>
+                        ))
+                    }
+                </div>
+
+                <div className="w-full h-[60px] bg-[#14518b] flex items-center pl-[20px]">
+                    <form className="Radio">
+                        {
+                            options.map((option,index) => (
+                                <>
+                                    <input type="radio" className="hidden" name={ID.toString()} id={`${option}-${ID}`}
+                                    onChange={() => onChange?.(ID, index.toString())}/>
+                                    <label 
+                                    className="relative rounded-[50%] bg-[white] py-[10px] px-[15px] mr-[20px] cursor-pointer font-bold"
+                                    htmlFor={`${option}-${ID}`}
+                                    >
+                                        {String.fromCharCode(65 + index)}
+                                    </label>
+                                </>
+                            ))
+                        }
+                    </form>
                 </div>
             </div>
         )
@@ -55,7 +89,7 @@ export const TrueFalseChoice = forwardRef<HTMLDivElement, PropsWithChildren<Mult
             return Result;
         }
         return (
-            <div className={`w-[500px] rounded-[10px] p-[20px] shadow-[0px_0px_10px_rgba(0,0,0,0.3)] mb-[20px]`} 
+            <div className={`w-full rounded-[10px] p-[20px] shadow-[0px_0px_10px_rgba(0,0,0,0.3)] mb-[20px]`} 
             style={{background : color || 'white'}}
             ref={ref}>
                 <h1 className="text-[30px] border-b-[2px] border-b-[#ccc] mb-[10px]">{question}</h1>
@@ -89,7 +123,7 @@ export const TrueFalseChoice = forwardRef<HTMLDivElement, PropsWithChildren<Mult
 export const ShortAnswer = forwardRef<HTMLDivElement, PropsWithChildren<ShortAnswerProps>>(
     function ShortAnswer({question, ID, onChange, color}, ref) {
         return (
-            <div className={`w-[500px] rounded-[10px] p-[20px] shadow-[0px_0px_10px_rgba(0,0,0,0.3)] mb-[20px]`} 
+            <div className={`w-full rounded-[10px] p-[20px] shadow-[0px_0px_10px_rgba(0,0,0,0.3)] mb-[20px]`} 
             style={{background : color || 'white'}}
             ref={ref}>
                 <h1 className="text-[30px] border-b-[2px] border-b-[#ccc] mb-[10px]">{question}</h1>

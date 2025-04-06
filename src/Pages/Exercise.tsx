@@ -44,11 +44,56 @@ export default function Test() {
 
     function handleSubmit(e : React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
+
+        console.log(answer);
     }
 
     return (
-        <div className="flex flex-col items-center mt-[10px] overflow-hidden">
-            <form onSubmit={handleSubmit}>
+        // <div className="flex flex-col items-center mt-[10px] overflow-hidden">
+        //     <form onSubmit={handleSubmit}>
+        //         {questionsList.map((question, index) => {
+        //             switch (question.type) {
+        //                 case 1:
+        //                     return (
+        //                         <QuestionComponent.MultipleChoice 
+        //                             question={question.question} 
+        //                             options={question.options} 
+        //                             ID={index}
+        //                             onChange={handleAnswerChange}
+        //                         />
+        //                     );
+                        
+        //                 case 2:
+        //                     return (
+        //                         <QuestionComponent.TrueFalseChoice 
+        //                             question={question.question} 
+        //                             options={question.options} 
+        //                             ID={index}
+        //                             onChange={handleAnswerChange}
+        //                         />
+        //                     );
+
+        //                 case 3:
+        //                     return (
+        //                         <QuestionComponent.ShortAnswer 
+        //                             question={question.question}
+        //                             ID={index}
+        //                             onChange={handleAnswerChange}
+        //                         />
+        //                     )
+        //             }
+        //         })}
+
+        //         <button 
+        //             type="submit"
+        //             className="w-full h-[50px] border-[1px] my-[50px] cursor-pointer bg-[#14518b] text-[white] rounded-[20px] hover:bg-[white] hover:text-[#14518b]
+        //             duration-300"
+        //         >Submit</button>
+        //     </form>
+        // </div>
+
+        <div className="w-full h-full flex p-[20px]">
+            <div className="w-[80%] h-full">
                 {questionsList.map((question, index) => {
                     switch (question.type) {
                         case 1:
@@ -79,15 +124,21 @@ export default function Test() {
                                     onChange={handleAnswerChange}
                                 />
                             )
-                    }
-                })}
+                        }
+                    })
+                }
 
-                <button 
-                    type="submit"
-                    className="w-full h-[50px] border-[1px] my-[50px] cursor-pointer bg-[#14518b] text-[white] rounded-[20px] hover:bg-[white] hover:text-[#14518b]
+                    
+                
+            </div>
+                
+            <div className="w-[20%] h-full flex flex-col items-center">
+            <button 
+                    onClick={(e) => handleSubmit(e)}
+                    className="w-[80%] h-[50px] border-[1px] my-[50px] cursor-pointer bg-[#14518b] text-[white] rounded-[20px] hover:bg-[white] hover:text-[#14518b]
                     duration-300"
                 >Submit</button>
-            </form>
+            </div>
         </div>
     )
 }
