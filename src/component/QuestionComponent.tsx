@@ -1,22 +1,8 @@
 import { forwardRef, PropsWithChildren, useRef } from "react";
 import "./Radio.css"
+import QuestionProp from "../api/QuestionApi";
 
-interface MultipleChoiceProps {
-    question : string;
-    options : [string, string, string, string];
-    color ?: string,
-    ID : number,
-    onChange : (id : number, value : string) => void;
-};
-
-interface ShortAnswerProps {
-    question : string,
-    ID : number,
-    color ?: string,
-    onChange : (id : number, value : string) => void;
-}
-
-export const MultipleChoice = forwardRef<HTMLDivElement, PropsWithChildren<MultipleChoiceProps>>(
+export const MultipleChoice = forwardRef<HTMLDivElement, PropsWithChildren<QuestionProp>>(
     function MultipleChoice({question, options, ID, onChange, color}, ref) {
         return (
             // <div className={`w-[500px] rounded-[10px] p-[20px] shadow-[0px_0px_10px_rgba(0,0,0,0.3)] mb-[20px]`} 
@@ -77,7 +63,7 @@ export const MultipleChoice = forwardRef<HTMLDivElement, PropsWithChildren<Multi
     }
 );
 
-export const TrueFalseChoice = forwardRef<HTMLDivElement, PropsWithChildren<MultipleChoiceProps>>(
+export const TrueFalseChoice = forwardRef<HTMLDivElement, PropsWithChildren<QuestionProp>>(
     function TrueFalseChoice({question, options, ID, onChange, color}, ref) {
         // let AnswerList : string[] = Array(options.length).fill("");
 
@@ -124,7 +110,7 @@ export const TrueFalseChoice = forwardRef<HTMLDivElement, PropsWithChildren<Mult
     }
 );
 
-export const ShortAnswer = forwardRef<HTMLDivElement, PropsWithChildren<ShortAnswerProps>>(
+export const ShortAnswer = forwardRef<HTMLDivElement, PropsWithChildren<QuestionProp>>(
     function ShortAnswer({question, ID, onChange, color}, ref) {
         return (
             <div className={`w-full rounded-[10px] p-[20px] shadow-[0px_0px_10px_rgba(0,0,0,0.3)] mb-[20px]`} 
@@ -141,29 +127,29 @@ export const ShortAnswer = forwardRef<HTMLDivElement, PropsWithChildren<ShortAns
     }
 );
 
-export const Coding = forwardRef<HTMLDivElement, PropsWithChildren<any>>(
-    function Coding({question, ID}, ref) {
+export const Coding = forwardRef<HTMLDivElement, PropsWithChildren<QuestionProp>>(
+    function Coding({topic, input, output, example, ID}, ref) {
         function handleCopy(text : any) {
             navigator.clipboard.writeText(text);
         }
 
         return (
             <div key={ID}>
-                <p className="text-[25px] mb-[20px]">{question.topic}</p>
+                <p className="text-[25px] mb-[20px]">{topic}</p>
 
                 <div className="mb-[20px]">
                     <p className="text-[30px] font-bold border-b-[1px] border-b-[#ccc] mb-[20px]">Input</p>
-                    <p className="text-[25px]">{question.input}</p>
+                    <p className="text-[25px]">{input}</p>
                 </div>
 
                 <div className="mb-[30px]">
                     <p className="text-[30px] font-bold border-b-[1px] border-b-[#ccc] mb-[20px]">Output</p>
-                    <p className="text-[25px]">{question.output}</p>
+                    <p className="text-[25px]">{output}</p>
                 </div>
 
                 <div>
                     {
-                        question.example.map((ex : String[]) => (
+                        example.map((ex : String[]) => (
                             <div className="mb-[40px]">
                                 <p 
                                 className="text-[30px] font-bold border-b-[1px] border-b-[#ccc] mb-[20px]">

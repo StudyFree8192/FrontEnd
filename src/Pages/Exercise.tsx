@@ -2,19 +2,7 @@ import { useEffect, useState } from "react";
 import * as QuestionComponent from "../component/QuestionComponent"
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-
-interface MultipleChoiceQuestion {
-    type: 1 | 2;
-    question: string;
-    options: [string, string, string, string];
-}
-
-interface TextQuestion {
-    type: 3;
-    question: string;
-}
-
-type Question = MultipleChoiceQuestion | TextQuestion;
+import Question from "../api/QuestionApi";
 
 export default function Test() {
     const param = useParams();
@@ -135,7 +123,10 @@ export default function Test() {
                             case 4: 
                                 return (
                                     <QuestionComponent.Coding
-                                    question = {question.question}
+                                        topic={question.question.topic}
+                                        input={question.question.input}
+                                        output={question.question.output}
+                                        example={question.question.example}
                                         ID={index}
                                     />
                                 )
