@@ -2,61 +2,84 @@ import { useEffect, useState } from "react";
 import * as QuestionComponent from "../component/QuestionComponent"
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import Question from "../api/QuestionApi";
+import questionInterface from "../api/QuestionApi";
 
 export default function Test() {
     const param = useParams();
 
-    const [questionsList, setQuestionsList] = useState<Question[]>([]);    
+    const [questionsList, setQuestionsList] = useState<questionInterface[]>([]);    
     const [nameProblem, setNameProblem] = useState<string>("");
     const path = window.location.pathname;
     const parts = path.split("/");
     const [answer, setAnswer] = useState<string[]>([]);
-    const [resultOfProblem, setResultOfProblem] = useState<string[]>([]);
     useEffect(() => {
         async function getQuestion() {
+            // Call API Question
             await axios.post(`http://localhost:8192/problems/${param.id}`, {
                 type : parts[1].toLowerCase(),
             })
             .then(res => {
-                let newQuestion : any[] = [];
-                let newResult : any[] = [];
-                for (let i = 0; i < res.data[0].length; i++) {
-                    const Question = {
-                        type : res.data[0][i].Type,
-                        question : res.data[0][i].Question,
-                        options : res.data[0][i].Options,
-                    };
-                    newQuestion.push(Question);
-                    switch (Question.type) {
-                        case 1:
-                            newResult.push(res.data[0][i].answer[0].toString());
-                            break;
+                let newQuestion : questionInterface[] = [];
+                for (let index = 0; index < res.data[0].length; index++) {
+                    const QuestionType = res.data[0][index].Type;
+                    if (QuestionType == 4) {
+                        const QuestionTestCase : string[][] = res.data[0][index].testcase;
+                        const QuestionCoding : {
+                            topic : string,
+                            input : string,
+                            output : string,
+                            example : string[][]
+                        } = res.data[0][index].Question;
                         
-                        case 2:
-                            let resultTrueFalse = "";
-                            for (let j = 0; j < 4; j++) {
-                                if (res.data[0][i].answer[j]) resultTrueFalse += "True"
-                                else resultTrueFalse += "False"
-                                if (j != 3) resultTrueFalse += "-"
-                            }
 
-                            newResult.push(resultTrueFalse);
-                            break;
-                        
-                        case 3:
-                            newResult.push(res.data[0][i].answer);
-                            break;
+                        newQuestion.push({
+                            id : index,
+                            type : 4,
+                            topic : QuestionCoding.topic,
+                            input : QuestionCoding.input,
+                            output : QuestionCoding.output,
+                            example : QuestionCoding.example,
+                            answer : QuestionTestCase
+                        });
+                    }
+                    else {
+                        const QuestionAnswer = res.data[0][index].answer;
+                        const Question : questionInterface = {
+                            id : index,
+                            type : QuestionType,
+                            question : res.data[0][index].Question,
+                            options : [],
+                            answer : ""
+                        };
 
-                        case 4:
-                            newResult.push(res.data[0][i].testcase);
+                        switch (QuestionType) {
+                            case 1:
+                                Question["answer"] = QuestionAnswer[0].toString();
+                                Question["options"] = res.data[0][index].Options;
+                                break;
+                            
+                            case 2:
+                                let resultTrueFalse = "";
+                                for (let j = 0; j < QuestionAnswer.length; j++) {
+                                    if (res.data[0][index].answer[j]) resultTrueFalse += "True"
+                                    else resultTrueFalse += "False"
+                                    if (j != 3) resultTrueFalse += "-"
+                                }
+                                Question["answer"] = resultTrueFalse;
+                                Question["options"] = res.data[0][index].Options;
+                                break;
+                            
+                            case 3:
+                                Question["answer"] = QuestionAnswer;
+                                break;
+                        }
+
+                        newQuestion.push(Question);
                     }
                 }
-
                 setNameProblem(res.data[1])
                 setQuestionsList(newQuestion);
                 setAnswer(Array(newQuestion.length).fill(""));
-                setResultOfProblem(newResult);
             })
             .catch(error => console.log(error));
         }
@@ -76,7 +99,7 @@ export default function Test() {
         e.preventDefault();
         navigate(`/${parts[1]}/${param.id}/Submit`, {
             state : {
-                answer, nameProblem, path, questionsList, resultOfProblem
+                answer, nameProblem, path, questionsList
             }
         })
     }
@@ -89,14 +112,12 @@ export default function Test() {
 
             <div className="flex flex-1 w-full">
                 <div className=" w-[80%] h-full">
-                    {questionsList.map((question, index) => {
+                    {questionsList.map((question) => {
                         switch (question.type) {
                             case 1:
                                 return (
                                     <QuestionComponent.MultipleChoice 
-                                        question={question.question} 
-                                        options={question.options} 
-                                        ID={index}
+                                        question={question} 
                                         onChange={handleAnswerChange}
                                     />
                                 );
@@ -104,9 +125,7 @@ export default function Test() {
                             case 2:
                                 return (
                                     <QuestionComponent.TrueFalseChoice 
-                                        question={question.question} 
-                                        options={question.options} 
-                                        ID={index}
+                                        question={question} 
                                         onChange={handleAnswerChange}
                                     />
                                 );
@@ -114,8 +133,7 @@ export default function Test() {
                             case 3:
                                 return (
                                     <QuestionComponent.ShortAnswer 
-                                        question={question.question}
-                                        ID={index}
+                                        question={question}
                                         onChange={handleAnswerChange}
                                     />
                                 )
@@ -123,11 +141,7 @@ export default function Test() {
                             case 4: 
                                 return (
                                     <QuestionComponent.Coding
-                                        topic={question.question.topic}
-                                        input={question.question.input}
-                                        output={question.question.output}
-                                        example={question.question.example}
-                                        ID={index}
+                                        question={question}
                                     />
                                 )
                             }

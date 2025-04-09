@@ -1,21 +1,27 @@
-interface MultipleChoiceQuestion {
+export interface MultipleChoiceQuestion {
+    id : number;
     type: 1 | 2;
     question: string;
-    options: [string, string, string, string];
+    options: string[];
+    answer : string;
 }
 
-interface TextQuestion {
+export interface TextQuestion {
+    id : number;
     type: 3;
     question: string;
+    answer : string;
 }
 
-interface CodingQuestion {
+export interface CodingQuestion {
+    id : number;
     type : 4;
-    topic : string,
-    input : string,
-    output : string,
-    example : string[][]
+    topic : string;
+    input : string;
+    output : string;
+    example : string[][];
+    answer : string[][];
 }
 
-type QuestionProp = MultipleChoiceQuestion | TextQuestion | CodingQuestion;
-export default QuestionProp;
+type questionInterface = MultipleChoiceQuestion | TextQuestion | CodingQuestion;
+export default questionInterface;

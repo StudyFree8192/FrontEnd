@@ -28,16 +28,94 @@ function CreateHub() {
     )
 }
 
-function CreateProblem() {
-    const [questionList, setQuestionList] = useState<Question[]>([{
-        type : 1,
-        question : "",
-        options : ["","","",""]
-    }]);
-    // const [idQuestionList, setIdQuestionList] = useState<number[]>([]);
-    // const [numOfQuestion, setNumOfQuestion] = useState<number>(0);
+type Props = {
+    index1 : number,
+    index2 : number,
+    id : number,
+    setAnswer : React.Dispatch<React.SetStateAction<string[]>>;
+}
 
-    // const [test, setTest] = useState<number>(0);
+function MultipleChoiceCreateUI({index1, index2, id, setAnswer} : Props) {
+    return (
+        <>
+            <div key={index2} className={`
+            border-[1px] border-[#ccc] flex justify-center items-center cursor-pointer p-[20px]`}>
+                <input 
+                    type="radio"
+                    className="w-full h-full"
+                    name={id.toString()}
+                    id={`${id}-${index2}`}
+                    onChange={() => setAnswer(t => {
+                        t[index1] = index2.toString();
+                        return t;
+                    })}
+                />
+            </div>
+
+            <div className="border-[1px] border-[#ccc] p-[20px]">
+                <textarea className="w-full outline-none text-[25px]"
+                onInput={(e) => {
+                    e.target.style.height = 'auto';
+                    e.target.style.height = `${e.target.scrollHeight}px`;
+                }}></textarea>
+            </div>
+        </>
+    )
+}
+
+function TrueFalseQuestionUI({index, id , setAnswer} : Props) {
+    return (
+        <>
+            <div key={index} className="p-[20px] border-[1px] border-[#ccc]">
+                <textarea className="w-full outline-none text-[25px]"
+                onInput={(e) => {
+                    e.target.style.height = 'auto';
+                    e.target.style.height = `${e.target.scrollHeight}px`;
+                }}></textarea>
+            </div>
+
+            <div className="flex items-center border-[1px] border-[#ccc] p-[20px] flex-wrap">
+                <div>
+                    <input type="radio" 
+                    id={`${id}-${index}-True`}
+                    name={`${id}-${index}`}
+                    className="w-[25px] h-[25px]" />
+                    <label htmlFor={`${id}-${index}-True`} className="ml-[5px] text-[25px]">Đúng</label>
+                </div>
+                
+                <div>
+                    <input type="radio" 
+                    id={`${id}-${index}-False`}
+                    name={`${id}-${index}`}
+                    className="ml-[20px] w-[25px] h-[25px]"/>
+                    <label htmlFor={`${id}-${index}-False`} className="ml-[5px] text-[25px]">Sai</label>
+                </div>
+            </div>
+        </>
+    )
+}
+
+function createCodingQuestionUI() {
+    return (
+        <>
+            
+        </>
+    )
+}
+
+
+function CreateProblem() {
+    // const [questionList, setQuestionList] = useState<Question[]>([{
+    //     type : 1,
+    //     question : "",
+    //     options : ["","","",""]
+    // }]);
+
+    const [questionList, setQuestionList] = useState<Question[]>([]);
+    const [idQuestionList, setIdQuestionList] = useState<number[]>([]);
+    const [numOfQuestion, setNumOfQuestion] = useState<number>(0);
+    const [result, setResult] = useState<string[]>([]);
+
     function Add() {
         const newQuestion : Question = {
             type : 1,
@@ -45,15 +123,26 @@ function CreateProblem() {
             options : ["","","",""]
         }
         setQuestionList(t => [...t, newQuestion]);
-        // setIdQuestionList(t => [...t, numOfQuestion]);
-        // setNumOfQuestion(t => t + 1);
+        setIdQuestionList(t => [...t, numOfQuestion]);
+        setNumOfQuestion(t => t + 1);
+        setResult(t => [...t, ""]);
     }
 
     function remove(index : number) {
-        const updateQuestion = questionList.filter((_, i) => i !== index);
-        // const updateIdQuestion = idQuestionList.filter((_, i) => i !== index);
-        setQuestionList(updateQuestion);
-        // setIdQuestionList(updateIdQuestion);
+        setQuestionList(prevQuestionList => {
+            const newList = prevQuestionList.filter((_, i) => i !== index);
+            return newList;
+        });
+
+        setResult(prevResult => {
+            const newResultList = prevResult.filter((_, i) => i !== index);
+            return newResultList;
+        })
+
+        setIdQuestionList(prevIdQuestionList => {
+            const newIdList = prevIdQuestionList.filter((_, i) => i !== index);
+            return newIdList;
+        });
     }
 
     type HandleChangeOption = {
@@ -65,67 +154,17 @@ function CreateProblem() {
         questionChange : false,
         typeChange : false
     }) {
-        const newList = [...questionList];
+        const newList : Question[] = [...questionList];
         if (option.questionChange) newList[index].question = e.target.value;
         if (option.typeChange) newList[index].type = e.target.value;
         setQuestionList(newList);
     }
 
-    function MultipleChoiceCreateUI(i : number) {
-        return (
-            <>
-                <div key={i} className="border-[1px] border-[#ccc] flex justify-center items-center cursor-pointer">
-                    <input 
-                    type="radio"
-                    className="hidden"
-                    />
-                    <label htmlFor="" className="text-[25px]">{String.fromCharCode(i + 65)}</label>
-                </div>
-
-                <div className="border-[1px] border-[#ccc] p-[20px]">
-                    <textarea className="w-full outline-none text-[25px]"
-                    onInput={(e) => {
-                        e.target.style.height = 'auto';
-                        e.target.style.height = `${e.target.scrollHeight}px`;
-                    }}></textarea>
-                </div>
-            </>
-        )
+    function handleSubmit() {
+        console.log(result);
     }
 
-    function TrueFalseQuestionUI(i : number) {
-        return (
-            <>
-                <div key={i} className="p-[20px] border-[1px] border-[#ccc]">
-                    <textarea className="w-full outline-none text-[25px]"
-                    onInput={(e) => {
-                        e.target.style.height = 'auto';
-                        e.target.style.height = `${e.target.scrollHeight}px`;
-                    }}></textarea>
-                </div>
-
-                <div className="flex items-center border-[1px] border-[#ccc] p-[20px] flex-wrap">
-                    <div>
-                        <input type="radio" className="w-[25px] h-[25px]" />
-                        <label htmlFor="" className="ml-[5px] text-[25px]">Đúng</label>
-                    </div>
-                    
-                    <div>
-                        <input type="radio" className="ml-[20px] w-[25px] h-[25px]"/>
-                        <label htmlFor="" className="ml-[5px] text-[25px]">Sai</label>
-                    </div>
-                </div>
-            </>
-        )
-    }
-
-    function createCodingQuestionUI() {
-        return (
-            <>
-                
-            </>
-        )
-    }
+    const [gender, setGender] = useState<string>("");
 
     return (
         <div className="w-full h-full relative px-[5%] flex">
@@ -150,21 +189,36 @@ function CreateProblem() {
                                     e.target.style.height = 'auto';
                                     e.target.style.height = `${e.target.scrollHeight}px`;
                                 }}
+                                value={question.question}
                                 onChange={(e) => handleChange(e, index, {questionChange : true})}
                                 />
+
+                                {/* <MultipleChoiceCreateUI index1={index} index2={i} id={index} setAnswer={setResult}/> */}
+
+                                
+
                                 {question.type == 1 || question.type == 2 ? (
                                     <>
-                                    <div className={`w-full grid grid-cols-[${question.type == 1 ? "20%_80%" : "80%_20%"}] text-[20px] mb-[40px]`}>
-                                        {Array.from({ length: 4 }).map((_, i) => (
-                                            <>
-                                                {question.type == 1 ? MultipleChoiceCreateUI(i) : TrueFalseQuestionUI(i)}
-                                            </>
-                                        ))}
-                                    </div>
-                                </>
+                                        <div 
+                                        className={`w-full grid ${question.type == 1 ? 
+                                            'grid-cols-[20%_80%]' : 
+                                            'grid-cols-[80%_20%]'} text-[20px] mb-[40px]`}
+                                        >
+                                            {Array.from({ length: 4 }).map((_, i) => (
+                                                <>
+
+                                                    <MultipleChoiceCreateUI index1={index} index2={i} id={idQuestionList[index]} setAnswer={setResult}/>
+                                                    {/* <TrueFalseQuestionUI index={i} id={index} setAnswer={setResult}/>
+                                                    question.type == 1 ?
+                                                    MultipleChoiceCreateUI(i, idQuestionList[index], {setResult()}) : 
+                                                    TrueFalseQuestionUI(i, idQuestionList[index])} */}
+                                                </>
+                                            ))}
+                                        </div>
+                                    </>
                                 ) : ""}
 
-                                {question.type == 3 ? (
+                                {/* {question.type == 3 ? (
                                     <>
                                         <input type="text" 
                                         placeholder="Ghi đáp" 
@@ -172,8 +226,7 @@ function CreateProblem() {
                                     </>
                                 ) : ""}
 
-                                {question.type == 4 ? createCodingQuestionUI() : ""}
-                                
+                                {question.type == 4 ? createCodingQuestionUI() : ""} */}
 
                                 <button 
                                 className="absolute right-[20px] bottom-[20px] text-[30px] cursor-pointer mt-[20px]">
@@ -189,7 +242,6 @@ function CreateProblem() {
                                     <option value="4">Coding</option>
                                 </select>
                             </div>
-
                         </div>
                     ))
                 }
@@ -201,7 +253,7 @@ function CreateProblem() {
                 hover:text-[#14518b] duration-[0.1s]">Xem Trước</button>
                 <button className="w-full h-[50px] border-[1px] cursor-pointer text-[25px]
                 bg-[#14518b] font-bold text-white rounded-[5px] border-[#14518b] hover:bg-[white] hover:border-[1px]
-                hover:text-[#14518b] duration-[0.1s]">Xuất</button>
+                hover:text-[#14518b] duration-[0.1s]" onClick={handleSubmit}>Xuất</button>
             </div>
         </div>  
     )

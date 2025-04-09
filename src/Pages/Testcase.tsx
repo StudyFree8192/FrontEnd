@@ -1,15 +1,16 @@
-import { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom"
+import questionInterface from "../api/QuestionApi";
 
 export default function Testcase() {
     const pathName = useLocation();
     const answer : string[] = pathName.state.answer;
-    const resultOfProblem : string[] = pathName.state.resultOfProblem;
     const nameProblem : string = pathName.state.nameProblem;
     const path : string = pathName.state.path;
-    const questionsList : string[] = pathName.state.questionsList;
+    const questionsList : questionInterface[] = pathName.state.questionsList;
     function CheckAnswer(index : number) {
-        if (answer[index].toLowerCase() == resultOfProblem[index].toLowerCase()) return <span className="text-[green]">Accept</span>
+        if (questionsList[index].type != 4)
+            if (answer[index].toLowerCase() == questionsList[index].answer.toLowerCase()) return <span className="text-[green]">Accept</span>
+        
         return <span className="text-[red]">Decline</span>
     }
 
@@ -23,7 +24,7 @@ export default function Testcase() {
 
             <div>
                 {
-                    questionsList.map((ans, index) => (
+                    questionsList.map((_, index) => (
                         <h1 className="text-[25px] font-bold">Test #{index + 1}: {CheckAnswer(index)}</h1>
                     ))
                 }

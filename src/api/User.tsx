@@ -11,8 +11,3 @@ const User : userInterface = {
 }
 
 export {User}; 
-
-// export const userContext = createContext<userInterface>({
-//     idUser : "",
-//     username : ""
-// }); 
