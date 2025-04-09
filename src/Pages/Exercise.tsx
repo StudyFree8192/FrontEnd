@@ -97,6 +97,7 @@ export default function Test() {
     const navigate = useNavigate();
     function handleSubmit(e : any) {
         e.preventDefault();
+        console.log(answer, questionsList);
         navigate(`/${parts[1]}/${param.id}/Submit`, {
             state : {
                 answer, nameProblem, path, questionsList

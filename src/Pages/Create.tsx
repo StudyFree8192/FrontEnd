@@ -44,12 +44,16 @@ type Props = {
 function MultipleChoiceCreateUI({Question, setAnswer} : Props) {
     if (Question.type == 3 || Question.type == 4) return "";
 
-    function handleChangeAnswer(index : number) {
+    function handleChangeAnswer(index : number, text : string = "") {
         if (Question.type == 3 || Question.type == 4) return "";
         const Update : questionInterface = {...Question};
 
         if (Question.type == 1) {
             Update.answer = (index + 1).toString();
+        } else {
+            let TrueFalseQuestionAnswerList = Update.answer.split("-");
+            TrueFalseQuestionAnswerList[index] = text;
+            Update.answer = TrueFalseQuestionAnswerList.join("-");
         }
 
         return Update;
@@ -58,17 +62,14 @@ function MultipleChoiceCreateUI({Question, setAnswer} : Props) {
     function handleChangeOption(e : any, index : number) {
         if (Question.type == 3 || Question.type == 4) return "";
         const Update : questionInterface = {...Question};
-
-        if (Question.type == 1) {
-            Update.options[index] = e.target.value;
-        }
+        Update.options[index] = e.target.value;
 
         return Update;
     }
     return (
         <div>
             {
-                Question.options.map((option, index) => {
+                Question.options.map((_, index) => {
                     if (Question.type == 1) {
                         return (
                             <div className="flex items-center mb-[20px]">
@@ -88,14 +89,17 @@ function MultipleChoiceCreateUI({Question, setAnswer} : Props) {
                                 <textarea 
                                 className="border-[1px] border-[#ddd] rounded-[10px] w-[90%] outline-none ml-[20px] text-[20px] p-[20px] overflow-hidden"
                                 onInput={(e) => textareaHeight(e)}
+                                onChange={(e) => setAnswer(handleChangeOption(e, index))}
                                 ></textarea>
                                 <input type="radio" 
                                 name={`${Question.id}-${index}`}
                                 id={`${Question.id}-${index}-True`} 
+                                onChange={(e) => setAnswer(handleChangeAnswer(index, "True"))}
                                 className="w-[50px] h-[50px] ml-[20px] cursor-pointer"/>
                                 <label htmlFor={`${Question.id}-${index}-True`} className="text-[20px] ml-[5px] cursor-pointer">Đúng</label>
                                 <input type="radio" name={`${Question.id}-${index}`} 
                                 id={`${Question.id}-${index}-False`}
+                                onChange={(e) => setAnswer(handleChangeAnswer(index, "False"))}
                                 className="w-[50px] h-[50px] ml-[20px] cursor-pointer"/>
                                 <label htmlFor={`${Question.id}-${index}-False`} className="text-[20px] ml-[5px] cursor-pointer">Sai</label>
                             </div>
@@ -183,6 +187,13 @@ function CreateProblem() {
             if (prevQuestionList.type !== 3 && prevQuestionList.type !== 4) {
                 const newOptions = [...prevQuestionList.options];
                 newOptions.push("");
+
+                if (prevQuestionList.type == 2) {
+                    let newAnswerTrueFalse : string = prevQuestionList.answer;
+
+                    if (prevQuestionList.options.length != 0) newAnswerTrueFalse += "-";
+                    return { ...prevQuestionList, options: newOptions, answer: newAnswerTrueFalse };
+                }
                 return { ...prevQuestionList, options: newOptions };
             }
             return prevQuestionList;
