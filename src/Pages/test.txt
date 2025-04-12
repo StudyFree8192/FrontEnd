@@ -1,0 +1,45 @@
+export function ToolCreate(props : {
+    question : questionInterface,
+    onClick : (value : questionInterface) => void
+}) {
+    const questionType = props.question.type;
+    const onClick = props.onClick;
+    return (
+        <button className="..." 
+        onClick={() => onClick()}
+        >
+            <IoMdAdd />
+        </button>
+    );
+};
+
+...
+
+function BoxQuestion(props : {
+    questionList : questionInterface[]}) {
+    const questionList = props.questionList;
+    return (
+        <>
+            {
+            questionList.map((question, index) => (
+                    ...
+                            <questionCreate.ToolCreate question={question} onClick={(value) => props.onChange(hello(value, index))}
+                    ...
+                ))
+            }
+        </>
+    );
+}
+
+function CreateContest() {
+    const [questionList, setQuestionList] = useState<questionInterface[]>([...]);
+    ...
+    return (
+        ...
+        <BoxQuestion questionList={questionList} onChange={(value) => setQuestionList(value)}/>  
+        ...
+    )
+}
+
+
+tôi có code trên, làm sao để onChange cho setQuestionList?

@@ -1,4 +1,4 @@
-// import { MathJaxContext, MathJax } from "better-react-mathjax"
+import { MathJaxContext, MathJax } from "better-react-mathjax"
 // import Chart from 'chart.js/auto';
 // import { getRelativePosition } from 'chart.js/helpers';
 
@@ -19,7 +19,14 @@
 //     }
 //   });
 
-import React, { useEffect, useRef } from 'react';
+{/* <p>
+                <MathJaxContext>
+                    <MathJax>{"\\(\\sqrt{10}\\)"}</MathJax>
+                </MathJaxContext>
+            </p> */}
+
+import axios from 'axios';
+import React, { useEffect, useRef, useState } from 'react';
 
 const DesmosGraph = () => {
 	const calculatorRef = useRef(null);
@@ -58,11 +65,82 @@ const DesmosGraph = () => {
 };
 
 function App() {
-  return (
-    <div className="App">
-      <DesmosGraph />
+
+	async function RunCode() {
+		axios.get('https://judge0-extra-ce.p.rapidapi.com/about', {
+			headers: {
+			  'x-rapidapi-host': 'judge0-extra-ce.p.rapidapi.com',
+			  'x-rapidapi-key': 'c993f2ead0mshcd292d5c8f48b29p1e19f5jsnd7f8c4f6bda0'
+			}
+		  })
+		  .then(response => {
+			console.log(response.data);
+		  })
+		  .catch(error => {
+			console.error('Lỗi:', error);
+		});
+	}
+
+	// const [value, setValue] = useState("<p>Hello world</p>");
+	// const [htmlContent, setHtmlContent] = useState('\\(\\ f(x)\\) \\(\\ f(x)\\)');
+	const [htmlContent, setHtmlContent] = useState('');
+	const [value, setValue] = useState('');
+
+	function handleCodeMath() {
+		axios.post("http://localhost:8192/handleCodeMath", {
+			MathText : htmlContent
+		}).then(
+			res => {
+				console.log(res.data)
+				setValue(res.data)
+			}
+		)
+
+	}
+
+	const config = {
+		loader: { load: ['input/tex', 'output/svg'] },
+		tex: {
+		inlineMath: [['\\(', '\\)']],
+		displayMath: [['\\[', '\\]']],
+		},
+  	};
+
+	//   const config = {
+	// 	loader: { load: ['[tex]/inline'] },
+	// 	tex: {
+	// 	  inlineMath: [['$', '$'], ['\\(', '\\)']],
+	// 	  displayMath: [['$$', '$$'], ['\\[', '\\]']]
+	// 	},
+	// 	svg: {
+	// 	  fontCache: 'global'
+	// 	}
+	//   };
+
+  	return (
+
+    	<div className="p-4">
+      {/* Input field */}
+      <input
+        type="text"
+        className="w-full p-[20px] text-[20px] border-[1px]"
+        onChange={(e) => setHtmlContent(e.target.value)}
+        placeholder="Enter HTML content"
+      />
+
+	  <button onClick={handleCodeMath} className="border-[1px]">Hello world</button>
+      <div className="mt-4">
+        <h2>Preview:</h2>
+        <MathJaxContext config={config}>
+			<div className="text-[50px]">
+				<MathJax>
+					{value}
+        		</MathJax>
+  			</div>
+        </MathJaxContext>
+      </div>
     </div>
-  );
+  	);
 }
 
 export default App;

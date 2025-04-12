@@ -1,22 +1,75 @@
-import { forwardRef, PropsWithChildren, useRef } from "react";
+import { forwardRef, PropsWithChildren, useEffect, useRef, useState } from "react";
 import "./Radio.css"
 import {MultipleChoiceQuestion, TextQuestion, CodingQuestion} from "../api/QuestionApi";
+import { MathJax, MathJaxContext } from "better-react-mathjax";
+import axios from "axios";
+
+const config = {
+    loader: { load: ['input/tex', 'output/svg'] },
+    tex: {
+            inlineMath: [['\\(', '\\)']],
+            displayMath: [['\\[', '\\]']],
+        },
+};
+
+async function handleCodeMath(content: string): Promise<string> {
+    const res = await axios.post("http://localhost:8192/handleCodeMath", {
+      MathText: content,
+    });
+    return res.data;
+  }
 
 export const MultipleChoice = forwardRef<HTMLDivElement, PropsWithChildren<any>>(
     function MultipleChoice(props, ref) {
         const data : MultipleChoiceQuestion = props.question;
         const ID = data.id;
+
+        const [mathContent, setMathContent] = useState('Loading...');
+        const [optionContentList, setOptionContentList] = useState<string[]>([]);
+
+        useEffect(() => {
+            async function Handle() {
+                await handleCodeMath(data.question).then((result) => {
+                    setMathContent(result);
+                });
+
+                if (data.type == 1) {
+                    let optionList : string[] = [];
+                    for (const option of data.options) {
+                        await handleCodeMath(option).then((result) => {
+                            optionList.push(result);
+                        })
+                        
+                    }
+                    setOptionContentList(optionList);
+                }
+            }
+
+            Handle();
+        }, [data.question]);
+
+
         return (
             <div className="w-full rounded-[10px] shadow-[0px_0px_10px_rgba(0,0,0,0.3)] mb-[20px] overflow-hidden"
             key = {ID}
             ref={ref}>
-                <h1 className="p-[20px] text-[30px] border-b-[2px] border-b-[#ccc] mb-[10px]">{data.question}</h1>
+                <h1 className="p-[20px] text-[30px] border-b-[2px] border-b-[#ccc] mb-[10px]">
+                    <MathJaxContext config={config}>
+                        <MathJax>
+                            {mathContent}
+                        </MathJax>
+                    </MathJaxContext>
+                </h1>
 
                 <div className="p-[20px]">
                     {
-                        data.options.map((option, index) => (
+                        optionContentList.map((option, index) => (
                             <p className="text-[25px]" key={index}>
-                                {String.fromCharCode(65 + index)}. {option}
+                                <MathJaxContext config={config}>
+                                    <MathJax>
+                                        {`${String.fromCharCode(65 + index)}. ${option}`}
+                                    </MathJax>
+                                </MathJaxContext>
                             </p>
                         ))
                     }
@@ -53,6 +106,8 @@ export const TrueFalseChoice = forwardRef<HTMLDivElement, PropsWithChildren<any>
         const AnswerList = useRef<string[]>(Array(data.options.length).fill(""));
         const ID = data.id;
 
+        
+
         function convertToString(index : number, value : string) {
             AnswerList.current[index] = value;
             let Result = "";
@@ -67,7 +122,9 @@ export const TrueFalseChoice = forwardRef<HTMLDivElement, PropsWithChildren<any>
             key={ID}
             // style={{background : color || 'white'}}
             ref={ref}>
-                <h1 className="text-[30px] border-b-[2px] border-b-[#ccc] mb-[10px]">{data.question}</h1>
+                <h1 className="text-[30px] border-b-[2px] border-b-[#ccc] mb-[10px]">
+                    {data.question}
+                </h1>
 
                 <div className="flex flex-col gap-4">
                 {data.options.map((option, index) => (
@@ -99,12 +156,27 @@ export const ShortAnswer = forwardRef<HTMLDivElement, PropsWithChildren<any>>(
     function ShortAnswer(props, ref) {
         const data : TextQuestion = props.question;
         const ID = data.id;
+
+        const [mathContent, setMathContent] = useState('Loading...');
+
+        useEffect(() => {
+            handleCodeMath(data.question).then((result) => {
+              setMathContent(result);
+            });
+          }, [data.question]);
+
         return (
             <div className={`w-full rounded-[10px] p-[20px] shadow-[0px_0px_10px_rgba(0,0,0,0.3)] mb-[20px]`} 
             // style={{background : color || 'white'}}
             key={ID}
             ref={ref}>
-                <h1 className="text-[30px] border-b-[2px] border-b-[#ccc] mb-[10px]">{data.question}</h1>
+                <h1 className="text-[30px] border-b-[2px] border-b-[#ccc] mb-[10px]">
+                    <MathJaxContext config={config}>
+                        <MathJax>
+                            {mathContent}
+                        </MathJax>
+                    </MathJaxContext>
+                </h1>
 
                 <input type="text" className="w-full h-[50px] border-[1px] border-[#ccc] rounded-[5px] outline-none p-[20px] text-[20px]"
                 onChange={(e) => props.onChange?.(ID, e.target.value)}

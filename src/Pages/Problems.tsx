@@ -29,7 +29,7 @@ export default function Problems() {
             await axios.post(`http://localhost:8192/problems`, {
                 type : parts[1].toLowerCase(),
                 page : page,
-                maxProblem : 10
+                maxProblem : 20
             })
             .then(res => {
                 setProblems(res.data);
@@ -60,8 +60,6 @@ export default function Problems() {
             case 1: return "Trên giấy";
             case 2: return "Lập trình";
         }
-        
-        
     }
 
     
