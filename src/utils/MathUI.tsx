@@ -28,41 +28,41 @@ import { MathJaxContext, MathJax } from "better-react-mathjax"
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
 
-const DesmosGraph = () => {
-	const calculatorRef = useRef(null);
-	const calculatorInstance = useRef(null);
+// const DesmosGraph = () => {
+// 	const calculatorRef = useRef(null);
+// 	const calculatorInstance = useRef(null);
 	
-	useEffect(() => {
-		const GraphClass = document.querySelector(".Graph");
-		if (!document.querySelector('script[src*="desmos.com"]')) {
-			const script = document.createElement('script');
-			script.src = 'https://www.desmos.com/api/v1.10/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6';
-			script.async = true;
+// 	useEffect(() => {
+// 		const GraphClass = document.querySelector(".Graph");
+// 		if (!document.querySelector('script[src*="desmos.com"]')) {
+// 			const script = document.createElement('script');
+// 			script.src = 'https://www.desmos.com/api/v1.10/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6';
+// 			script.async = true;
 
-			script.onload = () => {
-				var elt = calculatorRef.current;
-				calculatorInstance.current = Desmos.GraphingCalculator(elt, {
-					zoomButtons	: false,
-					keypad : false,
-					expressions : false
-				});
+// 			script.onload = () => {
+// 				var elt = calculatorRef.current;
+// 				calculatorInstance.current = Desmos.GraphingCalculator(elt, {
+// 					zoomButtons	: false,
+// 					keypad : false,
+// 					expressions : false
+// 				});
 
-				calculatorInstance.current.setExpression(
-				{
-					id : 'line1', 
-					latex : 'y=2x'
-				})
-			}
-			document.body.appendChild(script);
-		}
-	}, []);
+// 				calculatorInstance.current.setExpression(
+// 				{
+// 					id : 'line1', 
+// 					latex : 'y=2x'
+// 				})
+// 			}
+// 			document.body.appendChild(script);
+// 		}
+// 	}, []);
 
-	return (
-		<div className='Graph'>
-			<div ref={calculatorRef} style={{ width: '600px', height: '400px' }} />
-		</div>
-	);
-};
+// 	return (
+// 		<div className='Graph'>
+// 			<div ref={calculatorRef} style={{ width: '600px', height: '400px' }} />
+// 		</div>
+// 	);
+// };
 
 function App() {
 
@@ -81,8 +81,6 @@ function App() {
 		});
 	}
 
-	// const [value, setValue] = useState("<p>Hello world</p>");
-	// const [htmlContent, setHtmlContent] = useState('\\(\\ f(x)\\) \\(\\ f(x)\\)');
 	const [htmlContent, setHtmlContent] = useState('');
 	const [value, setValue] = useState('');
 
@@ -106,17 +104,6 @@ function App() {
 		},
   	};
 
-	//   const config = {
-	// 	loader: { load: ['[tex]/inline'] },
-	// 	tex: {
-	// 	  inlineMath: [['$', '$'], ['\\(', '\\)']],
-	// 	  displayMath: [['$$', '$$'], ['\\[', '\\]']]
-	// 	},
-	// 	svg: {
-	// 	  fontCache: 'global'
-	// 	}
-	//   };
-
   	return (
 
     	<div className="p-4">
@@ -128,7 +115,7 @@ function App() {
         placeholder="Enter HTML content"
       />
 
-	  <button onClick={handleCodeMath} className="border-[1px]">Hello world</button>
+	  <button onClick={handleCodeMath} className="border-[1px]">Run Code</button>
       <div className="mt-4">
         <h2>Preview:</h2>
         <MathJaxContext config={config}>
