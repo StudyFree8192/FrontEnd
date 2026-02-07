@@ -23,7 +23,10 @@ export default function SignIn() {
             navigate("/");
             
             location.reload();
-        }).catch(err => console.log(err));
+        }).catch(err => {
+            console.log("Hello world")
+            console.log(err)
+        });
     }
 
     return (

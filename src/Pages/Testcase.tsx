@@ -7,9 +7,14 @@ export default function Testcase() {
     const nameProblem : string = pathName.state.nameProblem;
     const path : string = pathName.state.path;
     const questionsList : questionInterface[] = pathName.state.questionsList;
+
+    let Score = 0;
     function CheckAnswer(index : number) {
         if (questionsList[index].type != 4)
-            if (answer[index].toLowerCase() == questionsList[index].answer.toLowerCase()) return <span className="text-[green]">Accept</span>
+            if (answer[index].toLowerCase() == questionsList[index].answer.toLowerCase()) {
+                ++Score;
+                return <span className="text-[green]">Accept</span>
+            } 
         
         return <span className="text-[red]">Decline</span>
     }
@@ -22,13 +27,18 @@ export default function Testcase() {
                 </h1>
             </div>
 
-            <div>
+            <div className="mb-[20px]">
                 {
                     questionsList.map((_, index) => (
                         <h1 className="text-[25px] font-bold">Test #{index + 1}: {CheckAnswer(index)}</h1>
                     ))
                 }
             </div>
+
+            <p className="text-[rgba(0,0,0,0.5)] tracking-[.25em]">---------------------------------------------------------------------</p>
+
+            <h1 className="text-[25px] mb-[50px]">
+                <b>Your Score:</b> {Score}</h1>
         </div>
     )
 }

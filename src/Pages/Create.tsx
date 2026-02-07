@@ -4,9 +4,8 @@ import "../component/Radio.css"
 // import { IoIosClose } from "react-icons/io";
 import questionInterface from "../api/QuestionApi";
 import axios from "axios";
-import * as questionCreate from "../component/questionCreate";
+import * as questionCreate from "../component/QuestionCreate.tsx";
 import { textareaHeight } from "../utils/inputUtils";
-import { MathJax, MathJaxContext } from "better-react-mathjax";
 
 function CreateHub() {
     return (
